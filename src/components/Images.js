@@ -2,9 +2,28 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import styled from "styled-components";
 
-const PhotoContainer = styled.div``;
+const PhotoContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+`;
+const ImageWrapper = styled.div`
+  border: 1px solid green;
 
-const Images = () => {
+  .image-item {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    transform: translateX(-${(props) => props.translate}px);
+    transition: transform ease-out ${(props) => props.transition}s;
+    height: 100%;
+    width: ${(props) => props.width}px;
+    display: flex;
+  }
+`;
+
+const Images = (props) => {
   const [images, setImages] = useState();
 
   const accessKey =
@@ -28,20 +47,19 @@ const Images = () => {
 
   return (
     <>
-      {" "}
-      {images &&
-        images.map((img) => (
-          <li key={img.id}>
-            <img
-              onClick={() => {
-                setImages(img.urls.regular);
-              }}
-              className="grid__item"
-              alt={img.alt_description}
-              src={img.urls.regular}
-            />
-          </li>
-        ))}
+      <PhotoContainer>
+        {" "}
+        {images &&
+          images.map((img) => (
+            <ImageWrapper key={img.id}>
+              <img
+                className="image-item"
+                alt={img.alt_description}
+                src={img.urls.regular}
+              />
+            </ImageWrapper>
+          ))}
+      </PhotoContainer>
     </>
   );
 };
