@@ -60,7 +60,7 @@ const ImageSlider = () => {
     const interval = setInterval(() => {
       if (index === 0) {
         return setTranslateX(translateX + -slideWidth());
-      } else if (index === 1) {
+      } else if (index === null) {
         return setTranslateX(0);
       }
     }, 2000);
