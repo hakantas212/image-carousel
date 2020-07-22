@@ -6,10 +6,11 @@ const Container = styled.div`
   border: 5px solid orange;
   position: relative;
   overflow: hidden;
-  width: 750px;
+  width: 100%;
+  max-width: 900px;
   margin: 0 auto;
-  height: 735px;
-  white-space: nowrap;
+  height: auto;
+
   button {
     border: 1px solid orange;
     position: absolute;
@@ -18,6 +19,7 @@ const Container = styled.div`
     width: 10%;
   }
 `;
+
 const PrevButton = styled.button`
   left: 0;
 `;
@@ -28,24 +30,24 @@ const NextButton = styled.button`
 const PhotoContainer = styled.div`
   position: relative;
   display: flex;
-  height: 700px;
-  width: 700px;
+  height: 100%;
+  width: 100%;
   transition: transform ease-out 0.3s;
 `;
 const ImageWrapper = styled.div`
   width: 100%;
+  max-width: 900px;
   height: 100%;
 
   img {
-    width: 700px;
-    height: 700px;
+    width: 900px;
+    height: 500px;
     object-fit: contain;
-    background-repeat: no-repeat;
-    background-position: center;
+    margin: 0 auto;
   }
 `;
 
-const ImageSlider = ({ img, i }) => {
+const ImageSlider = () => {
   const [index, setIndex] = useState(0);
   const [translateX, setTranslateX] = useState(0);
   const [images, setImages] = useState();
@@ -55,7 +57,16 @@ const ImageSlider = ({ img, i }) => {
 
   useEffect(() => {
     fetchImages();
-  }, []);
+    const interval = setInterval(() => {
+      if (index === 0) {
+        return setTranslateX(translateX + -slideWidth());
+      } else if (index === 1) {
+        return setTranslateX(0);
+      }
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [translateX, index]);
 
   const fetchImages = () => {
     axios
@@ -78,7 +89,7 @@ const ImageSlider = ({ img, i }) => {
   };
 
   const handleNext = () => {
-    if (index === fetchImages.length - 1) {
+    if (index === images.length - 1) {
       setIndex(0);
       setTranslateX(0);
     } else {
@@ -92,8 +103,11 @@ const ImageSlider = ({ img, i }) => {
     return document.querySelector(".slider-container").clientWidth;
   };
   return (
-    <Container className="slider-container">
-      <PhotoContainer style={{ transform: `translateX(${translateX}px)` }}>
+    <Container>
+      <PhotoContainer
+        className="slider-container"
+        style={{ transform: `translateX(${translateX}px)` }}
+      >
         {" "}
         {images &&
           images.map((img, i) => (
